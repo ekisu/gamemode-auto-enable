@@ -71,22 +71,22 @@ func enableGamemodeIfNeeded() {
 	for _, gameProcess := range gameProcesses {
 		pid := gameProcess.Pid
 
-		active, err := gamemode_client.IsActive(pid)
+		status, err := gamemode_client.QueryStatus(pid)
 		if err != nil {
 			log.Error().Err(err).Int32("pid", pid).Msg("failed to check gamemode status for process")
 
 			continue
 		}
 
-		if active {
-			log.Trace().Int32("pid", pid).Msg("gamemode already active for process")
+		if status.IsActive() {
+			log.Trace().Int32("pid", pid).Int("status", int(status)).Msg("gamemode already active for process")
 
 			continue
 		}
 
 		log.Info().Int32("pid", pid).Msg("new game process found, attempting to gamemode")
 
-		err = gamemode_client.Toggle(pid)
+		err = gamemode_client.RequestStartFor(pid)
 		if err != nil {
 			log.Error().Err(err).Int32("pid", pid).Msg("failed to enable gamemode for process")
 		} else {
