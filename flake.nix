@@ -21,5 +21,17 @@
             gopls
           ];
         };
-      });
+
+        packages = {
+          gamemode-auto-enable = pkgs.buildGoModule {
+            pname = "gamemode-auto-enable";
+            version = "0.0.1";
+            src = self;
+            vendorHash = "sha256-r9FG8gtQzkf/Idb1b8TrSoyoxBtwFTKosqeeaBRhiTQ=";
+          };
+          default = self.packages.${system}.gamemode-auto-enable;
+        };
+
+        nixosModules = {};
+       });
 }
