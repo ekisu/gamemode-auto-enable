@@ -84,7 +84,8 @@ func enableGamemodeIfNeeded() {
 			continue
 		}
 
-		log.Info().Int32("pid", pid).Msg("new game process found, attempting to gamemode")
+		exe, _ := gameProcess.Exe()
+		log.Info().Int32("pid", pid).Str("exe", exe).Msg("new game process found, attempting to gamemode")
 
 		err = gamemode_client.RequestStartFor(pid)
 		if err != nil {
@@ -153,6 +154,24 @@ func findGameProcessesRecursively(p *process.Process) ([]*process.Process, error
 }
 
 func isGameExecutable(exe string) bool {
-	// TODO implement a proper logic here
+	// FIXME This is mostly a guess, there's probably a better way to identify which processes are games.
+	// We can identify that a game is running by reading from ~/.steam/registry.vdf, but that won't help with identifying
+	// which process is the game process.
+
+	// Check for the `reaper` process, which is spawned wrapping the actual game process
+	if strings.Contains(exe, "/Steam/") && strings.HasSuffix(exe, "/reaper") {
+		return true
+	}
+
+	exceptions := []string{
+		"SteamLinuxRuntime",
+	}
+
+	for _, exception := range exceptions {
+		if strings.Contains(exe, exception) {
+			return false
+		}
+	}
+
 	return strings.Contains(exe, "/steamapps/common/")
 }
