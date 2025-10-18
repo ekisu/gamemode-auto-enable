@@ -15,7 +15,7 @@ import (
 func main() {
 	setupLogger()
 
-	log.Info().Msg("Starting gamemode-auto-enabled")
+	log.Info().Msg("starting gamemode-auto-enable")
 
 	for {
 		enableGamemodeIfNeeded()
