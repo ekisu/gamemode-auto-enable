@@ -19,7 +19,6 @@
             gcc
             go
             gopls
-            gamemode
           ];
         };
       });
