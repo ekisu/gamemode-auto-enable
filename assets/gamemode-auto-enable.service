@@ -1,0 +1,11 @@
+[Unit]
+Description=Automatically enable GameMode when a game is running.
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=/usr/local/bin/gamemode-auto-enable
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=graphical-session.target
